@@ -1,0 +1,76 @@
+#pragma warning(disable: 4996)
+#include<stdio.h>
+#include<stdlib.h>
+#include<ctype.h>
+void main(void)
+{
+	FILE * f_out;
+	int maxwlen = 1,f = 0;
+	int wlen = 0;
+	char s[1000];
+	f_out = fopen("text.txt", "rt");
+	while (fgets(s, 1000, f_out) != NULL)
+		{
+			int i = 0,l=0;
+			int F = 0;
+			int pos = 0;
+			for(l = 0; s[l]!='\0'; l++);
+			for(i = 0; i<=l; i++)
+			{
+				if (isspace(s[i]) != 0)
+				{
+					if (F == 1)
+					{
+						wlen = i - pos;
+						maxwlen = (wlen > maxwlen) ? wlen : maxwlen;
+						F=0;
+					}
+				}
+				else if (F == 0)
+				{
+					F = 1;
+					pos = i;
+				}
+			} 
+		}
+	fclose(f_out);
+	//второй этап, после того как нашли максимальную длину слова
+	for (int k = 1; k <= maxwlen; k++)
+	{
+		f_out = fopen("text.txt", "rt");
+		while (fgets(s, 1000, f_out) != NULL)
+		{
+			int i = 0,l;
+			int F = 0;
+			int pos = 0;
+			for (l = 0; s[l] != '\0'; l++);
+			for (i = 0; i <= l; i++)
+			{
+				if (isspace(s[i]) != 0 || s[i]==',')
+				{
+					if (F == 1)
+					{
+						int wlen = i - pos;
+						if (wlen == k)
+						{
+							for (int j = pos; j < i; j++)
+							{
+								putchar(s[j]);
+							}
+							printf_s("\n");
+						}
+						F = 0;
+					}
+				}
+				else if (F == 0)
+				{
+					F = 1;
+					pos = i;
+				}
+			} 
+		}
+		fclose(f_out);
+	}
+	getchar();
+	getchar();
+}
